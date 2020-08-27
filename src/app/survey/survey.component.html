@@ -1,0 +1,60 @@
+<!-- particles.js container -->
+<div id="particles-js"></div>
+<mat-horizontal-stepper [linear]="isLinear" #stepper class="panelTop">
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel></ng-template>
+      <mat-form-field class="container">
+        <input matInput placeholder="لطفا شماره همراه خود را وارد نمایید" formControlName="firstCtrl"
+          [(ngModel)]="phoneNo" type="number" autocomplete="off">
+      </mat-form-field>
+      <div class="center">
+        <button mat-button matStepperNext class="top50">مرحله بعد</button>
+      </div>
+    </form>
+  </mat-step>
+  <div *ngFor="let survey of surveys">
+    <mat-step [stepControl]="firstFormGroup">
+      <ng-template matStepLabel></ng-template>
+      <div *ngIf="survey.type.name == 'Slider'" class="container">
+        <span class="bottom20">{{survey.question}}</span>
+        <mat-slider [(ngModel)]="survey.answers[0]" [tickInterval]="5"></mat-slider>
+      </div>
+      <div *ngIf="survey.type.name == 'Checkbox'" class="container">
+        <span class="bottom20">{{survey.question}}</span>
+        <div class="parent">
+            <div *ngFor="let template of survey.templates" class="child">
+                <mat-checkbox [(ngModel)]="template.checked" class="pad-right">{{template.name}}</mat-checkbox>
+              </div>
+        </div>
+      </div>
+      <div *ngIf="survey.type.name == 'RadioButton'" class="container">
+        <span class="bottom20">{{survey.question}}</span>
+        <mat-radio-group [(ngModel)]="survey.answers[0]">
+          <mat-radio-button *ngFor="let template of survey.templates" class="pad-right" [value]="template.id">
+            {{template.name}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div *ngIf="survey.type.name == 'Text'" class="container">
+        <span class="bottom20">{{survey.question}}</span>
+        <mat-form-field class="container">
+          <textarea matInput placeholder="نظر ..." [(ngModel)]="survey.answers[0]"></textarea>
+        </mat-form-field>
+      </div>
+      <div class="center">
+        <button mat-button matStepperNext class="top50">مرحله بعد</button>
+      </div>
+    </mat-step>
+  </div>
+  <mat-step>
+    <ng-template matStepLabel></ng-template>
+    <span class="bottom20 container">تشکر از شرکت شما در نظر سنجی</span>
+    
+    <div class="center">
+      <!-- <button mat-button matStepperPrevious>Back</button> -->
+      <button mat-button (click)="saveSurveys();firstFormGroup.reset();stepper.reset()">پایان</button>
+      <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>
